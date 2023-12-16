@@ -26,6 +26,9 @@ import static com.justplay.badminton.Constants.TIME_SLOT;
 import static com.justplay.badminton.Constants.TIME_SLOT_ID;
 import static com.justplay.badminton.Constants.TIME_SLOT_IDS;
 
+/**
+ * Resource Class for basic timeslot CRUD operations.
+ */
 @RestController
 @RequestMapping(TIME_SLOT)
 public class TimeSlotResource {
