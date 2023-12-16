@@ -4,8 +4,6 @@ import com.justplay.badminton.request.TimeSlotCreateRequest;
 import com.justplay.badminton.request.TimeSlotUpdateRequest;
 import com.justplay.badminton.response.TimeSlotBookingResponse;
 import com.justplay.badminton.service.TimeSlotService;
-import jakarta.annotation.Nonnull;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-import static com.justplay.badminton.Constants.INSTITUTION_ID;
 import static com.justplay.badminton.Constants.TIME_SLOT;
 import static com.justplay.badminton.Constants.TIME_SLOT_ID;
 import static com.justplay.badminton.Constants.TIME_SLOT_IDS;
@@ -34,19 +33,44 @@ import static com.justplay.badminton.Constants.TIME_SLOT_IDS;
 public class TimeSlotResource {
     @Autowired
     private TimeSlotService timeSlotService;
+
+    /**
+     * Endpoint gets booking details with timings for a given time slot id.
+     * @param timeSlotId Id of the time slot whose booking details needs to be fetched.
+     * @return {@link TimeSlotBookingResponse} Returns booking details of a given time slot
+     */
     @GetMapping(path = TIME_SLOT_ID)
-    public TimeSlotBookingResponse getTimeSlot(@Nonnull @PathParam(INSTITUTION_ID)UUID institutionId,
-            @PathVariable(TIME_SLOT_ID) UUID timeSlotId) {
-        return timeSlotService.getBookingDetailsForGivenTimeSlot(institutionId, timeSlotId);
+    public TimeSlotBookingResponse getTimeSlot(@PathVariable(TIME_SLOT_ID) UUID timeSlotId) {
+        return timeSlotService.getBookingDetailsForGivenTimeSlot(timeSlotId);
     }
+
+    /**
+     * Endpoint to create Bulk time slots.
+     * @param timeSlotCreateRequests List of time slots that needs to be created.
+     * @return {@link List<TimeSlotBookingResponse>} returns List of time slots that are created.
+     */
     @PostMapping
-    public List<TimeSlotBookingResponse> createTimeSlot(@RequestBody List<TimeSlotCreateRequest> timeSlotCreateRequests) {
+    public List<TimeSlotBookingResponse> createTimeSlot(@Valid @NotNull
+        @RequestBody List<TimeSlotCreateRequest> timeSlotCreateRequests) {
         return timeSlotService.createTimeSlots(timeSlotCreateRequests);
     }
+
+    /**
+     * Endpoint to create Bulk update slots.
+     * @param timeSlotUpdateRequests List of time slots that needs to be bulk updated.
+     * @return {@link List<TimeSlotBookingResponse>} returns List of time slots that are updated.
+     */
     @PutMapping
-    public List<TimeSlotBookingResponse> updateTimeSlot(@RequestBody List<TimeSlotUpdateRequest> timeSlotUpdateRequests) {
+    public List<TimeSlotBookingResponse> updateTimeSlot(@Valid @NotNull
+        @RequestBody List<TimeSlotUpdateRequest> timeSlotUpdateRequests) {
         return timeSlotService.updateTimeSlots(timeSlotUpdateRequests);
     }
+
+    /**
+     * Endpoint to bulk delete time slots for given Ids.
+     * @param timeSlotIds List of time slot Ids to be deleted.
+     * @return {@link ResponseEntity} Returns success if following timeSlotIds are present else will return BAD request.
+     */
     @DeleteMapping
     public ResponseEntity deleteTimeSlots(@RequestParam(TIME_SLOT_IDS) List<UUID> timeSlotIds) {
         return timeSlotService.deleteTimeSlots(timeSlotIds);

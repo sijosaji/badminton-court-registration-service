@@ -22,7 +22,9 @@ import java.util.stream.Collectors;
 public class TimeSlotService {
     @Autowired
     private TimeSlotBookingRepository repository;
-    public TimeSlotBookingResponse getBookingDetailsForGivenTimeSlot(UUID institutionId, UUID timeSlotId) {
+
+
+    public TimeSlotBookingResponse getBookingDetailsForGivenTimeSlot(UUID timeSlotId) {
      Optional<TimeSlot> bookingFromEs = repository.findById(timeSlotId);
      return bookingFromEs.map(this::mapTimeLotToResponse).orElse(null);
     }
