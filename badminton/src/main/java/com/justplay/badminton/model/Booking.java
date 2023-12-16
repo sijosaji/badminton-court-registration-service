@@ -1,5 +1,6 @@
 package com.justplay.badminton.model;
 
+import com.justplay.badminton.enums.BookingStatus;
 import lombok.Data;
 
 import java.util.UUID;
@@ -10,4 +11,6 @@ public class Booking {
     private int noOfPlayers;
     private User user;
     private UUID timeSlotId;
+    private BookingStatus status;
+    private PaymentDetail paymentDetail;
 }
