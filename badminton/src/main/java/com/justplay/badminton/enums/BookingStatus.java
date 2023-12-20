@@ -3,7 +3,8 @@ package com.justplay.badminton.enums;
 public enum BookingStatus {
     IN_PROGRESS,
     BOOKED,
-    CANCELLED;
+    CANCELLED,
+    FAILED;
 
     public static BookingStatus fromString(String status) {
         for (BookingStatus value : values()) {
